@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  # development environment for SAML-COS
+  saml-cos:
+    init: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: saml-cos:dev
+    container_name: saml-cos
+    ports:
+    - "51773:51773"
+    - "52773:52773"
+    volumes:
+    - .:/app

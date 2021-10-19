@@ -1,0 +1,29 @@
+    // Unexpire passwords for dev mode
+    zn "%SYS"
+    Do ##class(Security.Users).UnExpireUserPasswords("*")
+
+    // Use this script for testing installing procedures 
+
+    // ---------------------
+    // ZPM install (SAML-COS)
+    // ---------------------
+
+    // install latest zpm version
+    //zn "%SYS"
+    //do $SYSTEM.OBJ.Load("/tmp/zpm.xml", "ck")
+
+    // create test environment
+    zn "USER"
+    do $SYSTEM.OBJ.Load("/opt/saml-cos/app/src/IBSP/CXN/SAML20/Installer.cls", "ck")
+    set vars("CreateEnvironment")="yes"
+    set vars("Namespace")="SAML-COS"
+    set vars("BasePath")="/opt/saml-cos/app"
+    set vars("DataDBPath")="/opt/saml-cos/db/data"
+    set vars("CodeDBPath")="/opt/saml-cos/db/code"
+    set sc = ##class(IBSP.CXN.SAML20.Installer).RunWithParams(.vars)
+    
+    // install module & run tests
+    zn "SAML-COS"
+    zpm "load -verbose /opt/saml-cos/app/"
+
+    halt

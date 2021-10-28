@@ -32,11 +32,11 @@ You can access now to the [Management Portal](http://localhost:52773/csp/sys/Uti
 4. There is a test WebApplication you can invoke doing a GET call to http://localhost:52773/saml-cos/api/test/:cip or doing a POST call to http://localhost:52773/saml-cos/api/test/ sending a request object including a "cip" property (e.g. {"cip":"ABCD0991231000"}). Both calls require authentication (superuser user can be used).  
 It calls the "Test" Business Service and returns a dummy response.
 
-5. Load a valid Certificate as explained below.
+5. Generate a valid Certificate as explained [here](#certificate) and load it in the Management Portal [X.509 Credentials](http://localhost:52773/csp/sys/sec/%25CSP.UI.Portal.X509Credentials.zen?$NAMESPACE=SAML-COS&$NAMESPACE=SAML-COS)
 
-6. Create your Business Operation to call the CatSalut WebService, define the necessary attributes and make it generate a SAML token. You have two different options to do so, as explained below.
+6. Create your Business Operation to call the CatSalut WebService, define the necessary [SAML parameters](#saml-parameters) and make it generate a SAML token. You have two different options to do so, as explained [here](#use-in-application).
 
-7. Make the "Test" Business Service call your Business Operation.
+7. Edit the "Test" Business Service and make it call your Business Operation.
 
 8. Call the API REST and look at the production messages to see if the SAML token has been generated.
 
@@ -91,7 +91,7 @@ Interaction scheme between the different production components for the generatio
 
 <img src="./img/SAMLComponentsInteraction.png">
 
-## SAML Configuration parameters
+## SAML Configuration parameters {#saml-parameters}
 
 | Parameter | Example | Description |
 | --------- | ------- | ----------- |
@@ -125,7 +125,7 @@ SAML configuration parameters can be defined in several places: some attribute v
 
 The SAMLReq message to be sent to the signing BO allows to specify the value of a validation. This value allows the BO to fill in the minimum set of SAML attributes following the precedence guidelines (Message, SAMLHelper configuration, SAMLSigner configuration) before signing.
 
-# Use in application
+# Use in application {#use-in-application}
 
 To use SAML20 classes in an application to call CatSalut services, it has to be proceeded as follows:
 
@@ -156,7 +156,7 @@ Property SAMLData As IBSP.CONN.SAML.Data.SAMLValues;
 ```
 And the this property can be sent as second parameter in the call to the "GetSAMLToken" method.
 
-# X509 Certificate Upload in InterSystems IRIS
+# X509 Certificate Upload in InterSystems IRIS {#certificate}
 
 CatSalut usually delivers the certificates in pkcs12 format (with the extension .p12 or .pfx) with the private key protected by a password that has to be converted to pem format for uploading to IRIS. Extraction with openssl as well as uploading to IRIS requires access to the password protecting the certificate.
 

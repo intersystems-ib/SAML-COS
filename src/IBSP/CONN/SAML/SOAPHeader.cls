@@ -7,7 +7,7 @@ Parameter XMLNAME = "Security";
 Parameter NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
 /// the XML Raw content for this SOAP Header
-Property content As %String(CONTENT = "MIXED", XMLPROJECTION = "content");
+Property content As %String(CONTENT = "MIXED", MAXLEN = "", XMLPROJECTION = "content");
 
 /// The XMLPREFIX parameter controls the prefix to be used for the XML namespace that 
 /// is given by the NAMESPACE parameter.

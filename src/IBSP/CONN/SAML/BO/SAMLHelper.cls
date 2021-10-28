@@ -1,6 +1,6 @@
-/// Clase de Ayuda para generación del token SAML20
+/// Clase de Ayuda para generación del token SAML
 /// Añadir esta clase como superclase a los BO que necesitan generar un token SAML
-Class IBSP.CXN.SAML20.BO.SAMLHelper Extends Ens.Host [ Abstract ]
+Class IBSP.CONN.SAML.BO.SAMLHelper Extends Ens.Host [ Abstract ]
 {
 
 /// This is a Default value for the X509 Certificate to use. It can be overridden in the input message
@@ -17,29 +17,20 @@ Property SAMLTimeToLive As %Integer [ InitialExpression = 600 ];
 /// { "ResponsibleUser":"HCC0555WS", "Profile": "MD" }
 Property SAMLAttributes As %String(MAXLEN = "");
 
-Parameter SETTINGS = "X509CertAlias:SAML20,SAMLIssuer:SAML20,SAMLTimeToLive:SAML20,SAMLAttributes:SAML20,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
-
-/// Metodo interno para añadir los attributos al token SAML
-Method AddAtt(pRequest As IBSP.CXN.SAML20.Msg.SAMLReq, pKey As %String, pValue As %String) [ Internal ]
-{
-	set tAtt=##class(IBSP.CXN.SAML20.Data.SAMLAttribute).%New()
-	set tAtt.AttributeId=pKey
-	set tAtt.AttributeValue=pValue
-	do pRequest.data.SAMLAttributes.Insert(tAtt)
-}
+Parameter SETTINGS = "X509CertAlias:SAML,SAMLIssuer:SAML,SAMLTimeToLive:SAML,SAMLAttributes:SAML,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
 
 /// API a invocar para genear un token SAML dentro de una Cabecera SOAP, para poder enviarlo como
 /// SOAP Security Header como parte de una llamada a un Web Service.
-Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CXN.SAML20.Data.SAMLValues, ByRef header As IBSP.CXN.SAML20.SOAPHeader) As %Status
+Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CONN.SAML.Data.SAMLValues, ByRef header As IBSP.CONN.SAML.SOAPHeader) As %Status
 {
 	#dim tSC as %Status = $$$OK
 	#dim errObj as %Exception.AbstractException
-	#dim request as IBSP.CXN.SAML20.Msg.SAMLReq = ##class(IBSP.CXN.SAML20.Msg.SAMLReq).%New()
+	#dim request as IBSP.CONN.SAML.Msg.SAMLReq = ##class(IBSP.CONN.SAML.Msg.SAMLReq).%New()
 	
 	#dim response as Ens.StringResponse = ##class(Ens.StringResponse).%New()
 	#dim tiquet as %String = ""
 	///---Initialize Request with Default Parameters and override with pSAMLParams 
-	set:(pSAMLParams="") pSAMLParams=##class(IBSP.CXN.SAML20.Data.SAMLValues).%New()
+	set:(pSAMLParams="") pSAMLParams=##class(IBSP.CONN.SAML.Data.SAMLValues).%New()
 	set tX509CertAlias=$select(pSAMLParams.X509CertAlias="":..X509CertAlias,1:pSAMLParams.X509CertAlias)
 	set tSAMLIssuer=$select(pSAMLParams.SAMLIssuer="":..SAMLIssuer,1:pSAMLParams.SAMLIssuer)
 	set tSAMLTimeToLive=$select(pSAMLParams.SAMLTimeToLive="":..SAMLTimeToLive,1:pSAMLParams.SAMLTimeToLive)
@@ -65,9 +56,9 @@ Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CXN.SAML20.Data.S
 	set request.data.SAMLTimeToLive=tSAMLTimeToLive
 	set request.data.SAMLValidator=pValidator
 	
-	set header=##class(IBSP.CXN.SAML20.SOAPHeader).%New()
+	set header=##class(IBSP.CONN.SAML.SOAPHeader).%New()
 	try {
- 		$$$THROWONERROR(tSC,..SendRequestSync("IBSP.CXN.SAML20.BO.SAMLSigner",request,.response,5))
+ 		$$$THROWONERROR(tSC,..SendRequestSync("IBSP.CONN.SAML.BO.SAMLSigner",request,.response,5))
  		if $isobject(response)&&(response.StringValue'="")
  		{
 	 		set tiquet = $replace(response.StringValue, "<?xml version=""1.0"" encoding=""UTF-8""?>", "")

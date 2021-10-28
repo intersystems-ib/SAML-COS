@@ -1,5 +1,5 @@
 /// Valores de parametros para generar el token SAML
-Class IBSP.CXN.SAML20.Data.SAMLValues Extends (%SerialObject, %XML.Adaptor)
+Class IBSP.CONN.SAML.Data.SAMLValues Extends (%SerialObject, %XML.Adaptor)
 {
 
 /// El nombre del Alias de Certificado X509 a usar para generar el token SAML
@@ -17,11 +17,11 @@ Property SAMLTimeToLive As %Integer [ InitialExpression = 600 ];
 
 /// El Tipo de Validador SAML a usar , segun documento HC3_Validacions_Globals_SAML_1.7.pdf
 /// Para cada servicio HC3, se requiere un validador distinto, que corresponde a una serie de Attributos Obligatorios
-Property SAMLValidator As %String(VALUELIST = ",Generic,ConsultaETC,ServeisSocials,NotificacioImatge,Monitorizacio,Mau,AccessLMS,ConfirmacioRegistre,IHC3,VisorProfesional,ConsultaDadesLMS");
+Property SAMLValidator As %String(VALUELIST = ",Generic,ConsultaETC,ServeisSocials,NotificacioImatge,Monitorizacio,Mau,AccessLMS,ConfirmacioRegistre,IHC3,VisorProfesional,ConsultaDadesLMS") [ InitialExpression = "ConsultaETC" ];
 
 /// Lista de Atributos para la generación del token SAML.
 /// Los atributos obligatorios varían según el Web Service del CatSalut a llamar
-/// Property SAMLAttributes As list Of IBSP.CXN.SAML20.Data.SAMLAttribute;
+/// Property SAMLAttributes As list Of IBSP.CONN.SAML.Data.SAMLAttribute;
 /// This is a (multi-line) json of Attribute:Value 
 /// { "ResponsibleUser":"HCC0555WS", "Profile": "MD" }
 Property SAMLAttributes As %String(MAXLEN = "");
@@ -37,22 +37,19 @@ Storage Default
 <Value>SAMLIssuer</Value>
 </Value>
 <Value name="3">
-<Value>SAMLTTL</Value>
-</Value>
-<Value name="4">
-<Value>SAMLAttributes</Value>
-</Value>
-<Value name="5">
 <Value>SAMLTimeToLive</Value>
 </Value>
-<Value name="6">
+<Value name="4">
 <Value>SAMLValidator</Value>
+</Value>
+<Value name="5">
+<Value>SAMLAttributes</Value>
 </Value>
 </Data>
 <Description>
 <![CDATA[El Tipo de Token SAML Pedido, al cual corresponden una serie de atributos obligatorios]]></Description>
 <State>SAMLValuesState</State>
-<StreamLocation>^IBSP.CXN.SAML20C649.SAMLValuesS</StreamLocation>
+<StreamLocation>^IBSP.CONN.SAML2A94.SAMLValuesS</StreamLocation>
 <Type>%Storage.Serial</Type>
 }
 

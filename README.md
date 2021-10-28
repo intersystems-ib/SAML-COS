@@ -64,7 +64,7 @@ zn "TEST"
 // load installer
 do $system.OBJ.Load("/tmp/SAML-COS/src/IBSP/CONN/SAML/Installer.cls","ck")
 // run installer
-do ##class(ITB.Installer).Run("/tmp/SAML-COS")
+do ##class(IBSP.CONN.SAML.Installer).Run("/tmp/SAML-COS")
 ```
 
 # Components

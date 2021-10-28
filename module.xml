@@ -15,7 +15,7 @@
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
       <SystemRequirements Version=">=2020.1" Interoperability="enabled" />
-      <Resource Name="IBSP.CXN.SAML20.PKG"/>
+      <Resource Name="IBSP.CONN.SAML.PKG"/>
     </Module>
   </Document>
 </Export>

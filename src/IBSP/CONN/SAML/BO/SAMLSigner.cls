@@ -1,7 +1,7 @@
 Include %soap
 
 /// Business Operation que genera un token SAML desde ObjectScript y las librerias internas de IRIS
-Class IBSP.CXN.SAML20.BO.SAMLSigner Extends Ens.BusinessOperation
+Class IBSP.CONN.SAML.BO.SAMLSigner Extends Ens.BusinessOperation
 {
 
 Parameter INVOCATION = "Queue";
@@ -15,7 +15,7 @@ Property SAMLIssuer As %String;
 /// A TimeToLive for the SAML token. This value gets overriden if specified in the Input Message
 Property SAMLTimeToLive As %Integer [ InitialExpression = 600 ];
 
-Parameter SETTINGS = "X509CertAlias:SAML20,SAMLIssuer:SAML20,SAMLTimeToLive:SAML20,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
+Parameter SETTINGS = "X509CertAlias:SAML,SAMLIssuer:SAML,SAMLTimeToLive:SAML,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
 
 /// Validates that all the required attributes are specified
 /// pValidator as %String(VALUELIST=",Generic,ConsultaETC,ServeisSocials,NotificacioImatge,Monitorizacio,Mau,AccessLMS,ConfirmacioRegistre,IHC3,VisorProfesional,ConsultaDadesLMS");
@@ -23,82 +23,50 @@ Parameter SETTINGS = "X509CertAlias:SAML20,SAMLIssuer:SAML20,SAMLTimeToLive:SAML
 /// { "ResponsibleUser":"HCC0555WS", "Profile": "MD" }
 Method ValidateAttributes(pValidator As %String, pAttributes As %DynamicObject) As %Status
 {
-	#DIM tSC as %Status=$$$OK
+	#DIM tSC as %Status = $$$OK
 	#DIM errObj as %Exception.AbstractException
+
 	try {
-		///--- 
-		set tRequired=""
-		if (pValidator="Generic") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization")
-			
-		}elseif (pValidator="ConsultaETC") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization","CodeUp","GivenName","FirstFamilyName","DocumentType","DocumentNumber","Code")
-		
-		}elseif (pValidator="ServeisSocials") {
-			
-			//CodeUp, obligatori:Depen del AccessType EP: SI MUNI: NO
-			//DescProviderOrganization: obligatori: Depen del AccessType, EP: No, MUNI: si
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization","AccessType")
-	
-		}elseif (pValidator="NotificacioImatge") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization","CodeUp")
-			
-		}elseif (pValidator="Monitorizacio") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization")
-			
-		}elseif (pValidator="Mau") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile")
-			
-		}elseif (pValidator="AccessLMS") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile")
-			
-		}elseif (pValidator="ConfirmacioRegistre") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization")
-			
-		}elseif (pValidator="IHC3") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization","CodeUp")
-			
-		}elseif (pValidator="VisorProfesional") {
-			
-			set tRequired=$lb("ResponsibleUser","Profile","Entity","ProviderOrganization","CodeUp")
-			
-		}elseif (pValidator="ConsultaDadesLMS"){
-			
-			set tRequired=$lb("ResponsibleUser","Profile","ProviderOrganization","GivenName","FirstFamilyName","DocumentNumber")
-	
-		}else {
-			///Throw Error
-			$$$ThrowStatus($$$ERROR($$$GeneralError,"IBSP.CXN.SAML20.BO.SAMLSigner:ValidateAttributes(): El valor para SAMLValidator '"_pValidator_"' es incorrecto"))
+
+		set tRequired = ..GetRequiredAttributes(pValidator)
+		if tRequired = "" {
+			$$$ThrowStatus($$$ERROR($$$GeneralError, "IBSP.CONN.SAML.BO.SAMLSigner:ValidateAttributes(): The '" _ pValidator _ "' SAMLValidator is not correct"))
 		}
-		set tMissing=""
-		for i=1:1:$listlength(tRequired) {
-			set tI=$li(tRequired,i)
-			if ('pAttributes.%IsDefined(tI)) {
-				set tMissing=tMissing_$lb(tI)
-			} 
+
+		set tMissing = ""
+		for i = 1: 1: $listlength(tRequired) {
+			set tI = $list(tRequired, i)
+			set:('pAttributes.%IsDefined(tI)) tMissing = tMissing_$lb(tI)
 		}
-		if (tMissing'="") {
-			///Throw Error
-			$$$ThrowStatus($$$ERROR($$$GeneralError,"IBSP.CXN.SAML20.BO.SAMLSigner:ValidateAttributes():  El SAMLValidator '"_pValidator_"' requiere los siguientes Attributos SAML que faltan '"_$ListToString(tMissing,",") ))
+
+		if tMissing '= "" {
+			$$$ThrowStatus($$$ERROR($$$GeneralError, "IBSP.CONN.SAML.BO.SAMLSigner:ValidateAttributes(): The '" _ pValidator _ "' SAMLValidator requieres the following missing SAML Attributes: '" _ $ListToString(tMissing, ",")))
 		}
-		//---
-		
-		
-	}catch(errObj) {
-		set tSC=errObj.AsStatus()
+	} catch(errObj) {
+		set tSC = errObj.AsStatus()
 	}
+
 	quit tSC
 }
 
-Method SignedAssertion(pRequest As IBSP.CXN.SAML20.Msg.SAMLReq, Output pResponse As Ens.StringResponse) As %Status
+Method GetRequiredAttributes(pValidator As %String) As %String [ Internal ]
+{
+	quit:(pValidator = "Generic") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
+	quit:(pValidator = "ConsultaETC") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp", "GivenName", "FirstFamilyName", "DocumentType", "DocumentNumber", "Code")
+	quit:(pValidator = "ServeisSocials") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "AccessType")
+	quit:(pValidator = "NotificacioImatge") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
+	quit:(pValidator = "Monitorizacio") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
+	quit:(pValidator = "Mau") $lb("ResponsibleUser", "Profile")
+	quit:(pValidator = "AccessLMS") $lb("ResponsibleUser", "Profile")
+	quit:(pValidator = "ConfirmacioRegistre") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
+	quit:(pValidator = "IHC3") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
+	quit:(pValidator = "VisorProfesional") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
+	quit:(pValidator = "ConsultaDadesLMS") $lb("ResponsibleUser", "Profile", "ProviderOrganization", "GivenName", "FirstFamilyName", "DocumentNumber")
+
+	quit ""
+}
+
+Method SignedAssertion(pRequest As IBSP.CONN.SAML.Msg.SAMLReq, Output pResponse As Ens.StringResponse) As %Status
 {
 	#DIM tSC as %Status=$$$OK
 	#DIM errObj as %Exception.AbstractException
@@ -118,7 +86,7 @@ Method SignedAssertion(pRequest As IBSP.CXN.SAML20.Msg.SAMLReq, Output pResponse
  		set tSAMLTimeToLive=$select(pRequest.data.SAMLTimeToLive="":..SAMLTimeToLive,1:pRequest.data.SAMLTimeToLive)
 		
  		set tAssertion=##class(%SAML.Assertion).Create()
- 		set tCredentials  = ##class(%SYS.X509Credentials).GetByAlias(tX509Alias)
+ 		set tCredentials = ##class(%SYS.X509Credentials).GetByAlias(tX509Alias)
 		Set tSignature=##class(%XML.Security.Signature).CreateX509(tCredentials,$$$SOAPWSIncludeNone,$$$KeyInfoX509Certificate) 
 		do tSignature.SetDigestMethod($$$SOAPWSsha1)		//GenCat Requirement
  		do tSignature.SetSignatureMethod($$$SOAPWSrsasha1)  //GenCat Requirement
@@ -138,7 +106,7 @@ Method SignedAssertion(pRequest As IBSP.CXN.SAML20.Msg.SAMLReq, Output pResponse
 }
 
 /// Fills the Assertion with the Values, Conditions and Attributes.
-Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CXN.SAML20.Msg.SAMLReq, pSAMLIssuer As %String, pSAMLTimeToLive As %Integer, pCredentials As %SYS.X509Credentials) As %Status
+Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CONN.SAML.Msg.SAMLReq, pSAMLIssuer As %String, pSAMLTimeToLive As %Integer, pCredentials As %SYS.X509Credentials) As %Status
 {
 	#DIM tSC as %Status=$$$OK
  	#DIM errObj as %Exception.AbstractException
@@ -148,12 +116,10 @@ Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CXN.S
 	#DIM nameIdentifier as %SAML.NameID=##class(%SAML.NameID).%New()
 	#DIM subject As %SAML.Subject= ##class(%SAML.Subject).%New()
 	#DIM attStatement as %SAML.AttributeStatement
-	#DIM samlAttribute as IBSP.CXN.SAML20.Data.SAMLAttribute
 
 	
 	set diarySeconds=86400,timeMinus=180,timeMax=$select(+pSAMLTimeToLive>300:+pSAMLTimeToLive,1:300)
 	set datetime=$ztimestamp
-	//if pRequest.data.SAMLTimeNow'="",pRequest.data.SAMLTimeNow'=$c(0) set datetime=$zdth(pRequest.data.SAMLTimeNow,3) b  
 	set (date,date1,date2)=$piece(datetime,",",1)
 	set (time,time1,time2)=$piece(datetime,",",2)
 	set milis=$piece(datetime,",",3)
@@ -189,7 +155,7 @@ Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CXN.S
 		set tAttributes={}.%FromJSON(pRequest.data.SAMLAttributes)
 		set tAtIt=tAttributes.%GetIterator()
 		while (tAtIt.%GetNext(.tAttributeId,.tAttributeValue)) {
-			do ..SAML20AddAttribute(.attStatement,tAttributeId,tAttributeValue)
+			do ..SAMLAddAttribute(.attStatement,tAttributeId,tAttributeValue)
 		}
 		
 		do tAssertion.Statement.Insert(attStatement)
@@ -243,7 +209,7 @@ Method Sign(pAssertion As %SAML.Assertion, pSignature As %XML.Security.Signature
 }
 
 /// Adds an Attrbute to the Attribute List
-Method SAML20AddAttribute(ByRef attStatement As %SAML.AttributeStatement, AttName As %String, AttValue As %String)
+Method SAMLAddAttribute(ByRef attStatement As %SAML.AttributeStatement, AttName As %String, AttValue As %String)
 {
 	#dim attr As %SAML.Attribute=##class(%SAML.Attribute).%New()
 	set attr.Name=AttName
@@ -257,7 +223,7 @@ Method SAML20AddAttribute(ByRef attStatement As %SAML.AttributeStatement, AttNam
 XData MessageMap
 {
 <MapItems>
-	<MapItem MessageType="IBSP.CXN.SAML20.Msg.SAMLReq"> 
+	<MapItem MessageType="IBSP.CONN.SAML.Msg.SAMLReq"> 
 		<Method>SignedAssertion</Method>
 	</MapItem>
 	

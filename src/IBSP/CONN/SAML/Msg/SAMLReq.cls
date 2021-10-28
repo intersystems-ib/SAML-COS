@@ -1,10 +1,10 @@
 /// Mensaje de Petición de Token SAML
-Class IBSP.CXN.SAML20.Msg.SAMLReq Extends Ens.Request
+Class IBSP.CONN.SAML.Msg.SAMLReq Extends Ens.Request
 {
 
 Parameter RESPONSECLASSNAME = "Ens.StringResponse";
 
-Property data As IBSP.CXN.SAML20.Data.SAMLValues;
+Property data As IBSP.CONN.SAML.Data.SAMLValues;
 
 Storage Default
 {

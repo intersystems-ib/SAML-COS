@@ -1,5 +1,5 @@
 /// Una Cabecera de SOAP para contener un token SAML firmado
-Class IBSP.CXN.SAML20.SOAPHeader Extends (%SOAP.Header, %XML.Adaptor)
+Class IBSP.CONN.SAML.SOAPHeader Extends (%SerialObject, %SOAP.Header, %XML.Adaptor)
 {
 
 Parameter XMLNAME = "Security";
@@ -22,5 +22,47 @@ Parameter XMLPREFIX As STRING = "wsse";
 /// NOTE:  Direct use of XMLExport method does not support the ELEMENTQUALIFIED.  The export must be
 /// done using %XML.Writer or SOAP support.
 Parameter ELEMENTQUALIFIED As BOOLEAN = 0;
+
+Storage Default
+{
+<Data name="SOAPHeaderState">
+<Value name="1">
+<Value>Fault</Value>
+</Value>
+<Value name="2">
+<Value>actor</Value>
+</Value>
+<Value name="3">
+<Value>mustUnderstand</Value>
+</Value>
+<Value name="4">
+<Value>%headerId</Value>
+</Value>
+<Value name="5">
+<Value>XmlId</Value>
+</Value>
+<Value name="6">
+<Value>HeaderBufferIndex</Value>
+</Value>
+<Value name="7">
+<Value>rewriteTag</Value>
+</Value>
+<Value name="8">
+<Value>rewriteFmt</Value>
+</Value>
+<Value name="9">
+<Value>rewriteNamespaces</Value>
+</Value>
+<Value name="10">
+<Value>rewriteMimeAttachments</Value>
+</Value>
+<Value name="11">
+<Value>content</Value>
+</Value>
+</Data>
+<State>SOAPHeaderState</State>
+<StreamLocation>^IBSP.CONN.SAML.SOAPHeaderS</StreamLocation>
+<Type>%Storage.Serial</Type>
+}
 
 }

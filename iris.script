@@ -14,13 +14,15 @@
 
     // create test environment
     zn "USER"
-    do $SYSTEM.OBJ.Load("/opt/saml-cos/app/src/IBSP/CXN/SAML20/Installer.cls", "ck")
+    do $SYSTEM.OBJ.Load("/opt/saml-cos/app/src/IBSP/CONN/SAML/Installer.cls", "ck")
     set vars("CreateEnvironment")="yes"
     set vars("Namespace")="SAML-COS"
+    set vars("CreateWebApp")="yes"
+    set vars("WebApp")="/saml-cos/api"
     set vars("BasePath")="/opt/saml-cos/app"
     set vars("DataDBPath")="/opt/saml-cos/db/data"
     set vars("CodeDBPath")="/opt/saml-cos/db/code"
-    set sc = ##class(IBSP.CXN.SAML20.Installer).RunWithParams(.vars)
+    set sc = ##class(IBSP.CONN.SAML.Installer).RunWithParams(.vars)
     
     // install module & run tests
     zn "SAML-COS"

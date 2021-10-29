@@ -3,7 +3,7 @@
   <Document name="saml-cos.ZPM">
     <Module>
       <Name>saml-cos</Name>
-      <Version>0.1.0</Version>
+      <Version>1.0.1</Version>
       <Description>SAML2.0 Token for Catalan HealthCare Autorities from InterSystems IRIS ObjectScript</Description>
       <Keywords>saml interoperability iris healthconnect catsalut hc3</Keywords>
       <Author>

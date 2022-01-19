@@ -142,6 +142,45 @@ To use SAML20 classes in an application to call CatSalut services, it has to be 
     * pSAMLParams: Allows defining values of SAML Attributes that are specific to the message (name of the signing physician, etc). If the object is defined, its values overwrite the values reported by default as configuration parameters.
     * header: ByRef parameter. SOAP header object returned with the SAML token.
 
+Here is an example of the resulting code in a Business Operation
+
+Class Definition:
+
+```ObjectScript
+/// PYD2022-01-14: BO generado desde URL de WSDL: https://pre.bus.salut.gencat.cat/hc3e/ws/public/EtcCerques_v02_01?wsdl
+/// Y modificado para añadir SuperClase de SAML
+Class HC3.Etcv21.WSCerques.BO.EtcCerquesImplPort Extends (Ens.BusinessOperation, IBSP.CONN.SAML.BO.SAMLHelper) [ ProcedureBlock ]
+{
+...
+}
+```
+
+Method Implementation:
+
+```ObjectScript
+/// PYD20220114: SAML para ConsultaETC
+Method consultaVariablesCliniques(pRequest As BE.HC3.Etcv21.WSCerques.Req.consultaVariablesCliniquesRequest, Output pResponse As BE.HC3.Etcv21.WSCerques.Rsp.consultaVariablesCliniquesResponse) As %Library.Status
+{
+ //PYD20220114+
+ /// API a invocar para genear un token SAML dentro de una Cabecera SOAP, para poder enviarlo como
+ /// SOAP Security Header como parte de una llamada a un Web Service. 
+ /// Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CONN.SAML.Data.SAMLValues, ByRef header As IBSP.CONN.SAML.SOAPHeader) As %Status
+ Set ..Adapter.WebServiceClientClass = "BE.HC3.Etcv21.WSCerques.EtcCerquesImplPort"
+ set tSC=..GetSAMLToken("ConsultaETC","",.tSAMLHeader)
+ //Instanciamos la clase de cliente antes del InvokeMethod para poder añadir el Header con el token SAML																
+ set ..Adapter.%Client=$classmethod(..Adapter.WebServiceClientClass,"%New")
+ do ..Adapter.%Client.HeadersOut.SetAt(tSAMLHeader,"Security")
+ //PYD20220114-
+ 
+ Set tSC = ..Adapter.InvokeMethod("consultaVariablesCliniques",.UpdateResponseVC,pRequest.consultarVCBean)  Quit:$$$ISERR(tSC) tSC
+ Set tSC = pRequest.NewResponse(.pResponse)  Quit:$$$ISERR(tSC) tSC
+ Set pResponse.UpdateResponseVC=$get(UpdateResponseVC)
+ Quit $$$OK
+}
+```
+
+
+
 ## Generate a SAML 2.0 token in a Business Service / Process (or even a Business Operation)
 
 * Create a "SAMLReq" object with the necessary properties and call "SAMLcos" Business Operation.

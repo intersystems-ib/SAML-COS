@@ -52,7 +52,7 @@ Method ValidateAttributes(pValidator As %String, pAttributes As %DynamicObject) 
 Method GetRequiredAttributes(pValidator As %String) As %String [ Internal ]
 {
 	quit:(pValidator = "Generic") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
-	quit:(pValidator = "ConsultaETC") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp", "GivenName", "FirstFamilyName", "DocumentType", "DocumentNumber", "Code")
+	quit:(pValidator = "ConsultaETC") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp", "GivenName", "FirstFamilyName", "DocumentType", "documentNumber", "code")
 	quit:(pValidator = "ServeisSocials") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "AccessType")
 	quit:(pValidator = "NotificacioImatge") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
 	quit:(pValidator = "Monitorizacio") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
@@ -61,7 +61,7 @@ Method GetRequiredAttributes(pValidator As %String) As %String [ Internal ]
 	quit:(pValidator = "ConfirmacioRegistre") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization")
 	quit:(pValidator = "IHC3") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
 	quit:(pValidator = "VisorProfesional") $lb("ResponsibleUser", "Profile", "Entity", "ProviderOrganization", "CodeUp")
-	quit:(pValidator = "ConsultaDadesLMS") $lb("ResponsibleUser", "Profile", "ProviderOrganization", "GivenName", "FirstFamilyName", "DocumentNumber")
+	quit:(pValidator = "ConsultaDadesLMS") $lb("ResponsibleUser", "Profile", "ProviderOrganization", "GivenName", "FirstFamilyName", "documentNumber")
 
 	quit ""
 }

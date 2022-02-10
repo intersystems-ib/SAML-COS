@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 *      The way to add a Security Header before sending has been consequently adapted: set ..Adapter.%Client.SecurityOut=tHeader
 * IBSP.CONN.SAML.BO.SAMLSigner.cls Method Sign()now forces the XML namespace alias in Assertion be be "xsi". 
 *      Solves an "invalid signature error" 
-
+* IBSP.CONN.SAML.BO.SAMLSigner.cls:GetRequiredAttributes() changed "code" and "documentNumber" to correct case (first letter is lowercase)
 ## 2021-10-28
 ### Added
 * IBSP.CONN.SAML.BO.SAMLcos.cls: BO to generate a SAML token from a Business Service / Process

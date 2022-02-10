@@ -169,7 +169,7 @@ Method consultaVariablesCliniques(pRequest As BE.HC3.Etcv21.WSCerques.Req.consul
  set tSC=..GetSAMLToken("ConsultaETC","",.tSAMLHeader)
  //Instanciamos la clase de cliente antes del InvokeMethod para poder añadir el Header con el token SAML																
  set ..Adapter.%Client=$classmethod(..Adapter.WebServiceClientClass,"%New")
- do ..Adapter.%Client.HeadersOut.SetAt(tSAMLHeader,"Security")
+ set ..Adapter.%Client.SecurityOut=tSAMLHeader
  //PYD20220114-
  
  Set tSC = ..Adapter.InvokeMethod("consultaVariablesCliniques",.UpdateResponseVC,pRequest.consultarVCBean)  Quit:$$$ISERR(tSC) tSC

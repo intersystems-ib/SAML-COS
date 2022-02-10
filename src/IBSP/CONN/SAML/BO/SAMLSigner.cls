@@ -185,6 +185,9 @@ Method Sign(pAssertion As %SAML.Assertion, pSignature As %XML.Security.Signature
   		set stream=##class(%Stream.TmpCharacter).%New()
   		
   		$$$THROWONERROR(tSC,writer.OutputToStream(stream))
+		//PYD20220210: force same alias for Schema-Instance namespace in body of Assertion as in SoapEnv header tag.
+		//             Catsalut Servers for insertion fail with "Invalid signature" if SAML Assertion has a different alias for Schema instance namespace
+		$$$THROWONERROR(tSC,writer.AddInstanceNamespace("xsi"))  
   		$$$THROWONERROR(tSC,writer.AddSchemaNamespace("s"))  //PYD:Marvin+
   		$$$THROWONERROR(tSC,writer.RootObject(pAssertion))
 
@@ -198,6 +201,9 @@ Method Sign(pAssertion As %SAML.Assertion, pSignature As %XML.Security.Signature
 		set pSignedStream=##class(%Stream.TmpCharacter).%New()
 		
 		$$$THROWONERROR(tSC,writer.OutputToStream(pSignedStream))
+		//PYD20220210: force same alias for Schema-Instance namespace in body of Assertion as in SoapEnv header tag.
+		//             Catsalut Servers for insertion fail with "Invalid signature" if SAML Assertion has a different alias for Schema instance namespace
+		$$$THROWONERROR(tSC,writer.AddInstanceNamespace("xsi"))  
 		$$$THROWONERROR(tSC,writer.AddSchemaNamespace("s"))   //PYD:Marvin+
 		$$$THROWONERROR(tSC,writer.RootObject(pAssertion))
 		do pSignedStream.%Save()

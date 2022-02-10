@@ -1,5 +1,5 @@
 /// Una Cabecera de SOAP para contener un token SAML firmado
-Class IBSP.CONN.SAML.SOAPHeader Extends (%SerialObject, %SOAP.Header, %XML.Adaptor)
+Class IBSP.CONN.SAML.SOAPHeader Extends (%SerialObject, %SOAP.Security.Header, %XML.Adaptor)
 {
 
 Parameter XMLNAME = "Security";

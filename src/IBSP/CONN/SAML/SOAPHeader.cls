@@ -33,31 +33,85 @@ Storage Default
 <Value>actor</Value>
 </Value>
 <Value name="3">
-<Value>mustUnderstand</Value>
+<Value>Namespace</Value>
 </Value>
 <Value name="4">
-<Value>%headerId</Value>
+<Value>ErrorCode</Value>
 </Value>
 <Value name="5">
-<Value>XmlId</Value>
+<Value>UsernameToken</Value>
 </Value>
 <Value name="6">
-<Value>HeaderBufferIndex</Value>
+<Value>Signature</Value>
 </Value>
 <Value name="7">
-<Value>rewriteTag</Value>
+<Value>%headerId</Value>
 </Value>
 <Value name="8">
-<Value>rewriteFmt</Value>
+<Value>SecurityElement</Value>
 </Value>
 <Value name="9">
-<Value>rewriteNamespaces</Value>
+<Value>ElementCount</Value>
 </Value>
 <Value name="10">
-<Value>rewriteMimeAttachments</Value>
+<Value>IsSigned</Value>
 </Value>
 <Value name="11">
+<Value>IsEncrypted</Value>
+</Value>
+<Value name="12">
+<Value>WSStream</Value>
+</Value>
+<Value name="13">
+<Value>WSPolicyOrder</Value>
+</Value>
+<Value name="14">
+<Value>WSPolicySignatureIndex</Value>
+</Value>
+<Value name="15">
+<Value>WSPolicyEncryptionIndex</Value>
+</Value>
+<Value name="16">
+<Value>SecurityNamespaces</Value>
+</Value>
+<Value name="17">
+<Value>BodyBufferIndex</Value>
+</Value>
+<Value name="18">
+<Value>HeaderBufferIndex</Value>
+</Value>
+<Value name="19">
+<Value>SoapPrefix</Value>
+</Value>
+<Value name="20">
+<Value>SoapVersion</Value>
+</Value>
+<Value name="21">
+<Value>Base64LineBreaks</Value>
+</Value>
+<Value name="22">
+<Value>SecurityContextToken</Value>
+</Value>
+<Value name="23">
+<Value>XmlId</Value>
+</Value>
+<Value name="24">
 <Value>content</Value>
+</Value>
+<Value name="25">
+<Value>mustUnderstand</Value>
+</Value>
+<Value name="26">
+<Value>rewriteFmt</Value>
+</Value>
+<Value name="27">
+<Value>rewriteMimeAttachments</Value>
+</Value>
+<Value name="28">
+<Value>rewriteNamespaces</Value>
+</Value>
+<Value name="29">
+<Value>rewriteTag</Value>
 </Value>
 </Data>
 <State>SOAPHeaderState</State>

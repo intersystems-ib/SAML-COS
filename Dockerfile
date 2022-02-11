@@ -1,7 +1,11 @@
 #
 # SAML-COS sample environment
 #
-ARG IMAGE=intersystemsdc/irishealth-community
+
+#ARG IMAGE=store/intersystems/irishealth-community:2020.1.0.215.0
+#ARG IMAGE=store/intersystems/irishealth-community:2020.4.0.547.0
+ARG IMAGE=store/intersystems/irishealth-community:2021.1.0.215.3
+ARG IMAGE=intersystemsdc/irishealth-community:2021.1.0.215.3-zpm
 FROM $IMAGE
 
 USER root

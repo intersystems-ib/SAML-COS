@@ -2,6 +2,8 @@
 
 SAML2.0 Token for Catalan HealthCare Autorities from InterSystems IRIS ObjectScript.
 
+See contributors at the end of document.
+
 # What is included?
 
 SAML-COS includes *Business Operations* you can use in your productions to generate SAML tokens signed according to CatSalut requirements, without external dependencies.
@@ -207,6 +209,13 @@ openssl pkcs12 -in cda.p12.pfx -out -cda.crt.pem -clcerts -nokeys
 ```
 
 Sometimes, the delivered .pfx file contains an internal RC2-40-CBC format that openssl cannot process; the solution is to import the certificate in the Windows CertStore and re-export it to change this internal format and have a .pfx processable by openssl
+
+---
+# THANKS AND CONTRIBUTORS
+
+This module has been possible through the active collaboration of many customers in Catalunya who have participated through their countless hours of testing, corrections and improvements. 
+
+We cannot name all the contributors here, but would like to add a special mention for Miguel Angel Fernandez Cross from the Hospital Parc de Salut Mar in Barcelona for his crucial fixes.
 
 ---
 **NOTE**

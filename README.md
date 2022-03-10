@@ -215,7 +215,7 @@ Sometimes, the delivered .pfx file contains an internal RC2-40-CBC format that o
 
 This module has been possible through the active collaboration of many customers in Catalunya who have participated through their countless hours of testing, corrections and improvements. 
 
-We cannot name all the contributors here, but would like to add a special mention for Miguel Angel Fernandez Cross from the Hospital Parc de Salut Mar in Barcelona for his crucial fixes.
+We cannot name all the contributors here, but would like to add a special mention for Miguel Angel Fernandez Cross from the Consorci Parc de Salut Mar in Barcelona for his crucial fixes.
 
 ---
 **NOTE**

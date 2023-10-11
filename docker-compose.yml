@@ -9,6 +9,7 @@ services:
       dockerfile: Dockerfile
     image: saml-cos:dev
     container_name: saml-cos
+    command: --ISCAgent false
     ports:
     - "51773:1972"
     - "52773:52773"

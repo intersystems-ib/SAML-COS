@@ -78,7 +78,11 @@ Method SignedAssertion(pRequest As IBSP.CONN.SAML.Msg.SAMLReq, Output pResponse 
 		set pResponse=##class(Ens.StringResponse).%New()
 		//--- Validate that all Attributes are present
 		set tAttributes={}.%FromJSON(pRequest.data.SAMLAttributes)
-		$$$THROWONERROR(tSC,..ValidateAttributes(pRequest.data.SAMLValidator,tAttributes))
+
+		if (pRequest.data.SAMLValidator'=$$$NULLOREF) {
+			$$$THROWONERROR(tSC,..ValidateAttributes(pRequest.data.SAMLValidator,tAttributes))
+		}
+		
 		//---
 		//--- Override Missing values with Default Settings
 		set tX509Alias=$select(pRequest.data.X509CertAlias="":..X509CertAlias,1:pRequest.data.X509CertAlias)

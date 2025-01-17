@@ -17,7 +17,10 @@ Property SAMLTimeToLive As %Integer [ InitialExpression = 600 ];
 /// { "ResponsibleUser":"HCC0555WS", "Profile": "MD" }
 Property SAMLAttributes As %String(MAXLEN = "");
 
-Parameter SETTINGS = "X509CertAlias:SAML,SAMLIssuer:SAML,SAMLTimeToLive:SAML,SAMLAttributes:SAML,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
+/// URLs para incluir como Condition (en AudienceRestriction). Se permite más de una URL separadas por puntos y coma ;
+Property SAMLAudienceRestrictionURL As %String(MAXLEN = "");
+
+Parameter SETTINGS = "SAMLAudienceRestrictionURL:SAML,X509CertAlias:SAML,SAMLIssuer:SAML,SAMLTimeToLive:SAML,SAMLAttributes:SAML,ReplyCodeActions,RetryInterval,AlertRetryGracePeriod:Alerting,FailureTimeout,QueueCountAlert:Alerting,QueueWaitAlert:Alerting,SendSuperSession";
 
 /// API a invocar para genear un token SAML dentro de una Cabecera SOAP, para poder enviarlo como
 /// SOAP Security Header como parte de una llamada a un Web Service.
@@ -34,7 +37,8 @@ Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CONN.SAML.Data.SA
 	set tX509CertAlias=$select(pSAMLParams.X509CertAlias="":..X509CertAlias,1:pSAMLParams.X509CertAlias)
 	set tSAMLIssuer=$select(pSAMLParams.SAMLIssuer="":..SAMLIssuer,1:pSAMLParams.SAMLIssuer)
 	set tSAMLTimeToLive=$select(pSAMLParams.SAMLTimeToLive="":..SAMLTimeToLive,1:pSAMLParams.SAMLTimeToLive)
-	
+	set tSAMLAudienceRestriction=$select(pSAMLParams.SAMLAudienceRestrictionURL="":..SAMLAudienceRestrictionURL,1:pSAMLParams.SAMLAudienceRestrictionURL)
+
 	//--Get Default SAML Attribute values from Portal if any
 	$$$TRACE(..SAMLAttributes)
 	set tDefaultAttObj=$Select(..SAMLAttributes="":{},1:{}.%FromJSON(..SAMLAttributes))
@@ -55,6 +59,7 @@ Method GetSAMLToken(pValidator As %String, pSAMLParams As IBSP.CONN.SAML.Data.SA
 	set request.data.SAMLIssuer=tSAMLIssuer
 	set request.data.SAMLTimeToLive=tSAMLTimeToLive
 	set request.data.SAMLValidator=pValidator
+	set request.data.SAMLAudienceRestrictionURL=tSAMLAudienceRestriction
 	
 	set header=##class(IBSP.CONN.SAML.SOAPHeader).%New()
 	try {

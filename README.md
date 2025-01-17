@@ -101,6 +101,7 @@ Interaction scheme between the different production components for the generatio
 | SAMLIssuer | HospitalXYZ | SAMLissuer name as specified by CatSalut. An arbitrary name works |
 | SAMLTimeToLive | 600 | SAML token validity time in seconds. After this time (in case of message resending), the token will be rejected |
 | SAMLAttributes | {"ResponsibleUser":"HCC0123AB","Profile":"MD","ProviderOrganization":"H0800000","Entity":"0123","CodeUp":"01234","GivenName":"SUPPORT","FirstFamilyName":"SUPPORT","DocumentType":"01","DocumentNumber":"12345678Z","Code":"108323233"} | SAML Attributes List. These attributes vary depending on the CatSalut Service to be invoked. The attributes are specified in JSON format from the portal. |
+| SAMLAudienceRestrictionURL | https://samlticket.example.com/SAML2 | Audience to whom the SAML Ticket is intended for. Urls can be separated by ; |
 
 SAML configuration parameters can be defined in several places: some attribute values can be specific to each call (e.g. the identification of a physician signing a clinical document), others specific to a Web service, and others common to all calls (same X509 Certificate for all calls). To give more flexibility, SAML parameters and attributes can be defined in 3 places
 

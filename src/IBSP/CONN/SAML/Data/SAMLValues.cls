@@ -26,6 +26,9 @@ Property SAMLValidator As %String(VALUELIST = ",Generic,ConsultaETC,ServeisSocia
 /// { "ResponsibleUser":"HCC0555WS", "Profile": "MD" }
 Property SAMLAttributes As %String(MAXLEN = "");
 
+/// URLs para incluir como Condition (en AudienceRestriction)
+Property SAMLAudienceRestrictionURL As %String(MAXLEN="");
+
 /// El Tipo de Token SAML Pedido, al cual corresponden una serie de atributos obligatorios
 Storage Default
 {

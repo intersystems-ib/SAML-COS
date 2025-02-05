@@ -109,6 +109,20 @@ Method SignedAssertion(pRequest As IBSP.CONN.SAML.Msg.SAMLReq, Output pResponse 
 	quit tSC
 }
 
+/// Create an %SAML.AudienceRestriction object with the URL received in the parameter
+Method CreateAudienceRestriction(audienceRestrictionURL as %String="") As %SAML.AudienceRestriction
+{
+	try {
+		Set tSC=$$$OK
+		Set tAudienceRestriction=##class(%SAML.AudienceRestriction).%New()
+		Do tAudienceRestriction.Audience.Insert(audienceRestrictionURL)
+	} catch ex {
+		Set tSC=ex.AsStatus()
+		Set tAudienceRestriction=""
+	}
+	Quit tAudienceRestriction
+}
+
 /// Fills the Assertion with the Values, Conditions and Attributes.
 Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CONN.SAML.Msg.SAMLReq, pSAMLIssuer As %String, pSAMLTimeToLive As %Integer, pCredentials As %SYS.X509Credentials) As %Status
 {
@@ -143,6 +157,17 @@ Method FillAssertion(ByRef tAssertion As %SAML.Assertion, pRequest As IBSP.CONN.
 		set conditions = ##class(%SAML.Conditions).%New()
 		set conditions.NotBefore=now1
 		set conditions.NotOnOrAfter=now2
+		
+		if (pRequest.data.SAMLAudienceRestrictionURL'=$$$NULLOREF) {
+			For i=1:1:$LENGTH(pRequest.data.SAMLAudienceRestrictionURL,";") {
+    				Set audienceURL = $PIECE(pRequest.data.SAMLAudienceRestrictionURL,";",i)
+    				if (audienceURL'=$$$NULLOREF) {
+					set audienceRestriction = ..CreateAudienceRestriction(audienceURL)
+					do conditions.Condition.Insert(audienceRestriction)
+    				}
+			}
+		}
+
 		set tAssertion.Conditions=conditions
 	
 		do tAssertion.Statement.Clear()
